@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,10 @@ Route::post('/login', [LoginController::class, 'login'])->name('user.login');
 
 Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::get('/todos/search/{title}', [TodoController::class, 'search']);
+    Route::apiResources([
+        'todos' => TodoController::class,
+    ]);
 });
+
