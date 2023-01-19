@@ -28,9 +28,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::apiResources([
         'todos' => TodoController::class,
     ]);
-    //Route::post('/todos', [TodoController::class, 'store'])->name('todo.store');
 });
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
-//     return $request->user();
-// });
