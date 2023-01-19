@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\TodoController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,15 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [RegisterController::class, 'register'])->name('user.register');
-Route::post('/login', [LoginController::class, 'login'])->name('user.login');
+Route::post('/register', [AuthController::class, 'register'])->name('user.register');
+Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 
 Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 
-Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
-    Route::get('/todos/search/{title}', [TodoController::class, 'search']);
-    Route::apiResources([
-        'todos' => TodoController::class,
-    ]);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::delete('/logout', [AuthController::class, 'logout'])->name('user.logout');
+    
+    Route::group(['middleware' => ['verified']], function () {
+        Route::get('/todos/search/{title}', [TodoController::class, 'search']);
+        Route::apiResources([
+            'todos' => TodoController::class,
+        ]);
+    });
+    
 });
 
